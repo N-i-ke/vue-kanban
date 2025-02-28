@@ -11,20 +11,28 @@
           <input type="checkbox" v-model="todo.completed" class="checkbox" />
           <span :class="{ completed: todo.completed }">{{ todo.text }}</span>
         </label>
-        <button class="delete-btn" @click="removeTodo(index)">削除</button>
+        <button class="trash-btn" @click="moveToTrash(index)">ゴミ箱に入れる</button>
+      </li>
+    </ul>
+    <h3>ゴミ箱</h3>
+    <ul>
+      <li v-for="(todo, index) in trash" :key="index" class="trash-item">
+        <span>{{ todo.text }}</span>
+        <button class="restore-btn" @click="restoreFromTrash(index)">復元</button>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const todos = ref([
   { text: 'Vue3を学ぶ', completed: false },
   { text: 'Todoアプリを作成', completed: false },
 ]);
 
+const trash = ref([]);
 const newTodo = ref('');
 
 const addTodo = () => {
@@ -34,14 +42,24 @@ const addTodo = () => {
   }
 };
 
-const removeTodo = (index) => {
+const moveToTrash = (index) => {
+  trash.value.push(todos.value[index]);
   todos.value.splice(index, 1);
 };
+
+const restoreFromTrash = (index) => {
+  todos.value.push(trash.value[index]);
+  trash.value.splice(index, 1);
+};
+
+onMounted(() => {
+  document.body.style.background = "#d3d3d3";
+});
 </script>
 
 <style scoped>
 .todo-container {
-  max-width: 600px;
+  min-width: 450px;
   margin: auto;
   padding: 20px;
   background: #f8f9fa;
@@ -75,7 +93,7 @@ ul {
   list-style-type: none;
   padding: 0;
 }
-.todo-item {
+.todo-item, .trash-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -92,15 +110,26 @@ ul {
 .checkbox {
   margin-right: 8px;
 }
-.delete-btn {
-  background: #dc3545;
+.trash-btn {
+  background: #ffc107;
   color: white;
   border: none;
   padding: 6px 10px;
   border-radius: 4px;
   cursor: pointer;
 }
-.delete-btn:hover {
-  background: #c82333;
+.trash-btn:hover {
+  background: #e0a800;
+}
+.restore-btn {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.restore-btn:hover {
+  background: #138496;
 }
 </style>
