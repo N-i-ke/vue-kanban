@@ -1,6 +1,12 @@
 <template>
   <div class="todo-container">
     <h2 class="todo-title">Board</h2>
+    <!-- Input Container -->
+    <div class="input-container">
+      <input v-model="newTodo" @keyup.enter="addTodo" placeholder="New Task" />
+      <button class="add-btn" @click="addTodo">Add Task</button>
+    </div>
+
     <div class="kanban-board">
       <!-- Todo Column -->
       <div class="kanban-column">
@@ -12,79 +18,135 @@
           @end="drag=false"
           :key="todos"
         >
-          <template #item="{ element, index }">
+          <template #item="{ element }">
             <div class="todo-item" :key="element.text">
               <label>
                 <input type="checkbox" v-model="element.completed" class="checkbox" />
                 <span :class="{ completed: element.completed }">{{ element.text }}</span>
               </label>
-              <button class="trash-btn" @click="moveToTrash(index)">ゴミ箱に入れる</button>
             </div>
           </template>
         </draggable>
       </div>
 
-      <!-- Trash Column -->
+      <!-- In Progress Column -->
       <div class="kanban-column">
-        <h3>Done</h3>
+        <h3>In Progress</h3>
         <draggable 
-          v-model="trash" 
+          v-model="inProgressTasks" 
           group="tasks" 
           @start="drag=true" 
           @end="drag=false"
-          :key="trash"
+          :key="inProgressTasks"
         >
-          <template #item="{ element, index }">
-            <div class="trash-item" :key="element.text">
-              <span>{{ element.text }}</span>
-              <button class="restore-btn" @click="restoreFromTrash(index)">復元</button>
+          <template #item="{ element }">
+            <div class="todo-item" :key="element.text">
+              <label>
+                <input type="checkbox" v-model="element.completed" class="checkbox" />
+                <span :class="{ completed: element.completed }">{{ element.text }}</span>
+              </label>
             </div>
           </template>
         </draggable>
       </div>
-    </div>
 
-    <!-- Input Container -->
-    <div class="input-container">
-      <input v-model="newTodo" @keyup.enter="addTodo" placeholder="新しいタスクを入力" />
-      <button class="add-btn" @click="addTodo">追加</button>
+      <!-- Code Review Column -->
+      <div class="kanban-column">
+        <h3>Code Review</h3>
+        <draggable 
+          v-model="codeReviewTasks" 
+          group="tasks" 
+          @start="drag=true" 
+          @end="drag=false"
+          :key="codeReviewTasks"
+        >
+          <template #item="{ element }">
+            <div class="todo-item" :key="element.text">
+              <label>
+                <input type="checkbox" v-model="element.completed" class="checkbox" />
+                <span :class="{ completed: element.completed }">{{ element.text }}</span>
+              </label>
+            </div>
+          </template>
+        </draggable>
+      </div>
+
+      <!-- Test Column -->
+      <div class="kanban-column">
+        <h3>Test</h3>
+        <draggable 
+          v-model="testTasks" 
+          group="tasks" 
+          @start="drag=true" 
+          @end="drag=false"
+          :key="testTasks"
+        >
+          <template #item="{ element }">
+            <div class="todo-item" :key="element.text">
+              <label>
+                <input type="checkbox" v-model="element.completed" class="checkbox" />
+                <span :class="{ completed: element.completed }">{{ element.text }}</span>
+              </label>
+            </div>
+          </template>
+        </draggable>
+      </div>
+
+      <!-- Done Column -->
+      <div class="kanban-column">
+        <h3>Done</h3>
+        <draggable 
+          v-model="doneTasks" 
+          group="tasks" 
+          @start="drag=true" 
+          @end="drag=false"
+          :key="doneTasks"
+        >
+          <template #item="{ element }">
+            <div class="todo-item" :key="element.text">
+              <label>
+                <input type="checkbox" v-model="element.completed" class="checkbox" />
+                <span :class="{ completed: element.completed }">{{ element.text }}</span>
+              </label>
+            </div>
+          </template>
+        </draggable>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import draggable from 'vuedraggable';
 
+// Tasks
 const todos = ref([
   { text: 'Vue3を学ぶ', completed: false },
   { text: 'Todoアプリを作成', completed: false },
 ]);
 
-const trash = ref([]);
+// In Progress Tasks
+const inProgressTasks = ref([]);
+
+// Code Review Tasks
+const codeReviewTasks = ref([]);
+
+// Test Tasks
+const testTasks = ref([]);
+
+// Done Tasks
+const doneTasks = ref([]);
 const newTodo = ref('');
 const drag = ref(false);
 
+// Add new task
 const addTodo = () => {
   if (newTodo.value.trim() !== '') {
     todos.value.push({ text: newTodo.value, completed: false });
     newTodo.value = '';
   }
 };
-
-const moveToTrash = (index) => {
-  trash.value.push(todos.value[index]);
-  todos.value.splice(index, 1);
-};
-
-const restoreFromTrash = (index) => {
-  todos.value.push(trash.value[index]);
-  trash.value.splice(index, 1);
-};
-
-onMounted(() => {
-  document.body.style.background = "#d3d3d3";
-});
 </script>
 
 <style scoped>
@@ -107,7 +169,7 @@ onMounted(() => {
 }
 
 .kanban-column {
-  width: 45%;
+  width: 18%;
 }
 
 .input-container {
@@ -141,7 +203,7 @@ ul {
   padding: 0;
 }
 
-.todo-item, .trash-item {
+.todo-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -159,31 +221,5 @@ ul {
 
 .checkbox {
   margin-right: 8px;
-}
-
-.trash-btn {
-  background: #ffc107;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.trash-btn:hover {
-  background: #e0a800;
-}
-
-.restore-btn {
-  background: #17a2b8;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.restore-btn:hover {
-  background: #138496;
 }
 </style>
