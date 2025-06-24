@@ -282,20 +282,24 @@ const addTodo = () => {
   border: none;
   border-radius: 25px;
   font-size: 16px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .task-input:focus {
   outline: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .task-input::placeholder {
-  color: #999;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .add-btn {
@@ -332,10 +336,10 @@ const addTodo = () => {
 
 .kanban-column {
   width: 20%;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   padding: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   min-height: 400px;
@@ -344,7 +348,9 @@ const addTodo = () => {
 
 .kanban-column:hover {
   transform: translateY(-5px);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .column-header {
@@ -353,7 +359,7 @@ const addTodo = () => {
   gap: 10px;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .column-icon {
@@ -362,10 +368,11 @@ const addTodo = () => {
 
 .column-header h3 {
   margin: 0;
-  color: #333;
+  color: white;
   font-size: 1.1em;
   font-weight: 600;
   flex: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .task-count {
@@ -384,24 +391,26 @@ const addTodo = () => {
   padding: 10px;
   border-radius: 15px;
   transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .draggable-container.dragging {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-  border: 2px dashed #667eea;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  border: 2px dashed rgba(255, 255, 255, 0.4);
 }
 
 .todo-item {
-  background: white;
+  background: rgba(255, 255, 255, 0.15);
   padding: 15px;
   border-radius: 12px;
   margin-bottom: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   cursor: grab;
   transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(5px);
 }
 
 .todo-item::before {
@@ -411,7 +420,7 @@ const addTodo = () => {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -421,8 +430,10 @@ const addTodo = () => {
 }
 
 .todo-item:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .todo-item:active {
@@ -436,7 +447,8 @@ const addTodo = () => {
 }
 
 .todo-item.completed {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .todo-item label {
@@ -459,13 +471,14 @@ const addTodo = () => {
   word-break: break-all;
   line-height: 1.5;
   font-size: 14px;
-  color: #333;
+  color: white;
   transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .task-text.completed {
   text-decoration: line-through;
-  color: #6c757d;
+  color: rgba(255, 255, 255, 0.6);
   font-style: italic;
   opacity: 0.7;
 }
@@ -481,8 +494,8 @@ const addTodo = () => {
 .checkmark {
   height: 20px;
   width: 20px;
-  background-color: #f8f9fa;
-  border: 2px solid #dee2e6;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 4px;
   position: relative;
   flex-shrink: 0;
@@ -490,8 +503,8 @@ const addTodo = () => {
 }
 
 .checkbox:checked ~ .checkmark {
-  background: linear-gradient(45deg, #28a745, #20c997);
-  border-color: #28a745;
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  border-color: #ff6b6b;
 }
 
 .checkmark:after {
@@ -514,12 +527,12 @@ const addTodo = () => {
 /* ドラッグ中のスタイル */
 .sortable-ghost {
   opacity: 0.3;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
   transform: scale(0.95);
 }
 
 .sortable-chosen {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
 }
 
 /* レスポンシブ対応 */
