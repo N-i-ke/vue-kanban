@@ -173,7 +173,7 @@ const addTodo = () => {
   text-align: left;
 }
 .todo-container {
-  min-width: 650px;
+  min-width: 1200px;
   margin: auto;
   padding: 20px;
   background: #f8f9fa;
@@ -185,28 +185,30 @@ const addTodo = () => {
 .kanban-board {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
 }
 
 .kanban-column {
-  width: 18%;
+  width: 20%;
   background: #ffffff;
   border-radius: 8px;
   padding: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 200px;
 }
 
 .kanban-column h3 {
   margin-top: 0;
   margin-bottom: 16px;
   color: #333;
-  font-size: 1.1em;
+  font-size: 1.2em;
+  font-weight: 600;
 }
 
 .draggable-container {
-  min-height: 100px;
-  padding: 8px;
-  border-radius: 4px;
+  min-height: 150px;
+  padding: 12px;
+  border-radius: 6px;
   transition: background-color 0.2s ease;
 }
 
@@ -248,21 +250,27 @@ ul {
 
 .todo-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: flex-start;
   background: white;
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   cursor: grab;
   transition: all 0.2s ease;
   border: 1px solid #e9ecef;
+  min-height: 60px;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow: hidden;
 }
 
 .todo-item:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
 .todo-item:active {
@@ -271,17 +279,42 @@ ul {
 
 .todo-item.dragging {
   opacity: 0.8;
-  transform: rotate(5deg);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: rotate(3deg);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.todo-item label {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  cursor: grab;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.todo-item label span {
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
+  flex: 1;
+}
+
+.todo-item label:active {
+  cursor: grabbing;
 }
 
 .completed {
   text-decoration: line-through;
-  color: gray;
+  color: #6c757d;
+  font-style: italic;
 }
 
 .checkbox {
-  margin-right: 8px;
+  margin-right: 0;
+  transform: scale(1.2);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 /* ドラッグ中のスタイル */
