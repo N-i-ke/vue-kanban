@@ -16,10 +16,12 @@
           group="tasks" 
           @start="drag=true" 
           @end="drag=false"
-          :key="todos"
+          item-key="id"
+          class="draggable-container"
+          :class="{ 'dragging': drag }"
         >
           <template #item="{ element }">
-            <div class="todo-item" :key="element.text">
+            <div class="todo-item" :class="{ 'dragging': drag }">
               <label>
                 <input type="checkbox" v-model="element.completed" class="checkbox" />
                 <span :class="{ completed: element.completed }">{{ element.text }}</span>
@@ -37,10 +39,12 @@
           group="tasks" 
           @start="drag=true" 
           @end="drag=false"
-          :key="inProgressTasks"
+          item-key="id"
+          class="draggable-container"
+          :class="{ 'dragging': drag }"
         >
           <template #item="{ element }">
-            <div class="todo-item" :key="element.text">
+            <div class="todo-item" :class="{ 'dragging': drag }">
               <label>
                 <input type="checkbox" v-model="element.completed" class="checkbox" />
                 <span :class="{ completed: element.completed }">{{ element.text }}</span>
@@ -58,10 +62,12 @@
           group="tasks" 
           @start="drag=true" 
           @end="drag=false"
-          :key="codeReviewTasks"
+          item-key="id"
+          class="draggable-container"
+          :class="{ 'dragging': drag }"
         >
           <template #item="{ element }">
-            <div class="todo-item" :key="element.text">
+            <div class="todo-item" :class="{ 'dragging': drag }">
               <label>
                 <input type="checkbox" v-model="element.completed" class="checkbox" />
                 <span :class="{ completed: element.completed }">{{ element.text }}</span>
@@ -79,10 +85,12 @@
           group="tasks" 
           @start="drag=true" 
           @end="drag=false"
-          :key="testTasks"
+          item-key="id"
+          class="draggable-container"
+          :class="{ 'dragging': drag }"
         >
           <template #item="{ element }">
-            <div class="todo-item" :key="element.text">
+            <div class="todo-item" :class="{ 'dragging': drag }">
               <label>
                 <input type="checkbox" v-model="element.completed" class="checkbox" />
                 <span :class="{ completed: element.completed }">{{ element.text }}</span>
@@ -100,10 +108,12 @@
           group="tasks" 
           @start="drag=true" 
           @end="drag=false"
-          :key="doneTasks"
+          item-key="id"
+          class="draggable-container"
+          :class="{ 'dragging': drag }"
         >
           <template #item="{ element }">
-            <div class="todo-item" :key="element.text">
+            <div class="todo-item" :class="{ 'dragging': drag }">
               <label>
                 <input type="checkbox" v-model="element.completed" class="checkbox" />
                 <span :class="{ completed: element.completed }">{{ element.text }}</span>
@@ -120,10 +130,15 @@
 import { ref } from 'vue';
 import draggable from 'vuedraggable';
 
+// ユニークIDを生成する関数
+const generateId = () => {
+  return Date.now() + Math.random().toString(36).substr(2, 9);
+};
+
 // Tasks
 const todos = ref([
-  { text: 'Vue3を学ぶ', completed: false },
-  { text: 'Todoアプリを作成', completed: false },
+  { id: generateId(), text: 'Vue3を学ぶ', completed: false },
+  { id: generateId(), text: 'Todoアプリを作成', completed: false },
 ]);
 
 // In Progress Tasks
@@ -143,7 +158,11 @@ const drag = ref(false);
 // Add new task
 const addTodo = () => {
   if (newTodo.value.trim() !== '') {
-    todos.value.push({ text: newTodo.value, completed: false });
+    todos.value.push({ 
+      id: generateId(), 
+      text: newTodo.value, 
+      completed: false 
+    });
     newTodo.value = '';
   }
 };
@@ -166,10 +185,34 @@ const addTodo = () => {
 .kanban-board {
   display: flex;
   justify-content: space-between;
+  gap: 16px;
 }
 
 .kanban-column {
   width: 18%;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.kanban-column h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.draggable-container {
+  min-height: 100px;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.draggable-container.dragging {
+  background-color: #f0f8ff;
+  border: 2px dashed #007bff;
 }
 
 .input-container {
@@ -208,10 +251,28 @@ ul {
   align-items: center;
   justify-content: space-between;
   background: white;
-  padding: 10px;
-  border-radius: 4px;
+  padding: 12px;
+  border-radius: 6px;
   margin-bottom: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  transition: all 0.2s ease;
+  border: 1px solid #e9ecef;
+}
+
+.todo-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.todo-item:active {
+  cursor: grabbing;
+}
+
+.todo-item.dragging {
+  opacity: 0.8;
+  transform: rotate(5deg);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .completed {
@@ -221,5 +282,15 @@ ul {
 
 .checkbox {
   margin-right: 8px;
+}
+
+/* ドラッグ中のスタイル */
+.sortable-ghost {
+  opacity: 0.5;
+  background: #f8f9fa;
+}
+
+.sortable-chosen {
+  background: #e3f2fd;
 }
 </style>
