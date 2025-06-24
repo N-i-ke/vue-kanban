@@ -42,12 +42,14 @@
           :class="{ 'dragging': drag }"
         >
           <template #item="{ element }">
-            <div class="todo-item" :class="{ 'dragging': drag, 'completed': element.completed }">
-              <label>
-                <input type="checkbox" v-model="element.completed" class="checkbox" />
-                <span class="checkmark"></span>
-                <span class="task-text" :class="{ completed: element.completed }">{{ element.text }}</span>
-              </label>
+            <div class="todo-item" :class="{ 'dragging': drag, 'completed': element.completed }" @click="openTaskModal(element)">
+              <div class="task-content">
+                <span class="task-text" :class="{ completed: element.completed }">{{ element.title || element.text }}</span>
+                <div class="task-meta" v-if="element.assignee || element.memo">
+                  <span class="assignee" v-if="element.assignee">👤 {{ element.assignee }}</span>
+                  <span class="memo-indicator" v-if="element.memo">📝</span>
+                </div>
+              </div>
             </div>
           </template>
         </draggable>
@@ -70,12 +72,14 @@
           :class="{ 'dragging': drag }"
         >
           <template #item="{ element }">
-            <div class="todo-item" :class="{ 'dragging': drag, 'completed': element.completed }">
-              <label>
-                <input type="checkbox" v-model="element.completed" class="checkbox" />
-                <span class="checkmark"></span>
-                <span class="task-text" :class="{ completed: element.completed }">{{ element.text }}</span>
-              </label>
+            <div class="todo-item" :class="{ 'dragging': drag, 'completed': element.completed }" @click="openTaskModal(element)">
+              <div class="task-content">
+                <span class="task-text" :class="{ completed: element.completed }">{{ element.title || element.text }}</span>
+                <div class="task-meta" v-if="element.assignee || element.memo">
+                  <span class="assignee" v-if="element.assignee">👤 {{ element.assignee }}</span>
+                  <span class="memo-indicator" v-if="element.memo">📝</span>
+                </div>
+              </div>
             </div>
           </template>
         </draggable>
@@ -98,12 +102,14 @@
           :class="{ 'dragging': drag }"
         >
           <template #item="{ element }">
-            <div class="todo-item" :class="{ 'dragging': drag, 'completed': element.completed }">
-              <label>
-                <input type="checkbox" v-model="element.completed" class="checkbox" />
-                <span class="checkmark"></span>
-                <span class="task-text" :class="{ completed: element.completed }">{{ element.text }}</span>
-              </label>
+            <div class="todo-item" :class="{ 'dragging': drag, 'completed': element.completed }" @click="openTaskModal(element)">
+              <div class="task-content">
+                <span class="task-text" :class="{ completed: element.completed }">{{ element.title || element.text }}</span>
+                <div class="task-meta" v-if="element.assignee || element.memo">
+                  <span class="assignee" v-if="element.assignee">👤 {{ element.assignee }}</span>
+                  <span class="memo-indicator" v-if="element.memo">📝</span>
+                </div>
+              </div>
             </div>
           </template>
         </draggable>
@@ -126,12 +132,14 @@
           :class="{ 'dragging': drag }"
         >
           <template #item="{ element }">
-            <div class="todo-item" :class="{ 'dragging': drag, 'completed': element.completed }">
-              <label>
-                <input type="checkbox" v-model="element.completed" class="checkbox" />
-                <span class="checkmark"></span>
-                <span class="task-text" :class="{ completed: element.completed }">{{ element.text }}</span>
-              </label>
+            <div class="todo-item" :class="{ 'dragging': drag, 'completed': element.completed }" @click="openTaskModal(element)">
+              <div class="task-content">
+                <span class="task-text" :class="{ completed: element.completed }">{{ element.title || element.text }}</span>
+                <div class="task-meta" v-if="element.assignee || element.memo">
+                  <span class="assignee" v-if="element.assignee">👤 {{ element.assignee }}</span>
+                  <span class="memo-indicator" v-if="element.memo">📝</span>
+                </div>
+              </div>
             </div>
           </template>
         </draggable>
@@ -154,15 +162,81 @@
           :class="{ 'dragging': drag }"
         >
           <template #item="{ element }">
-            <div class="todo-item" :class="{ 'dragging': drag, 'completed': element.completed }">
-              <label>
-                <input type="checkbox" v-model="element.completed" class="checkbox" />
-                <span class="checkmark"></span>
-                <span class="task-text" :class="{ completed: element.completed }">{{ element.text }}</span>
-              </label>
+            <div class="todo-item" :class="{ 'dragging': drag, 'completed': element.completed }" @click="openTaskModal(element)">
+              <div class="task-content">
+                <span class="task-text" :class="{ completed: element.completed }">{{ element.title || element.text }}</span>
+                <div class="task-meta" v-if="element.assignee || element.memo">
+                  <span class="assignee" v-if="element.assignee">👤 {{ element.assignee }}</span>
+                  <span class="memo-indicator" v-if="element.memo">📝</span>
+                </div>
+              </div>
             </div>
           </template>
         </draggable>
+      </div>
+    </div>
+
+    <!-- Task Detail Modal -->
+    <div v-if="showModal" class="modal-overlay" @click="closeModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h2>Task Details</h2>
+          <button class="close-btn" @click="closeModal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Title</label>
+            <input 
+              v-model="editingTask.title" 
+              type="text" 
+              class="form-input"
+              placeholder="Enter task title..."
+            />
+          </div>
+          <div class="form-group">
+            <label>Assignee</label>
+            <input 
+              v-model="editingTask.assignee" 
+              type="text" 
+              class="form-input"
+              placeholder="Enter assignee name..."
+            />
+          </div>
+          <div class="form-group">
+            <label>Memo</label>
+            <textarea 
+              v-model="editingTask.memo" 
+              class="form-textarea"
+              placeholder="Enter task memo..."
+              rows="4"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <div class="status-toggle">
+              <button 
+                class="status-btn" 
+                :class="{ 'active': !editingTask.completed }"
+                @click="editingTask.completed = false"
+              >
+                <span class="status-icon">⏳</span>
+                In Progress
+              </button>
+              <button 
+                class="status-btn" 
+                :class="{ 'active': editingTask.completed }"
+                @click="editingTask.completed = true"
+              >
+                <span class="status-icon">✅</span>
+                Completed
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" @click="closeModal">Cancel</button>
+          <button class="btn-primary" @click="saveTask">Save Changes</button>
+        </div>
       </div>
     </div>
   </div>
@@ -179,8 +253,8 @@ const generateId = () => {
 
 // Tasks
 const todos = ref([
-  { id: generateId(), text: 'Vue3を学ぶ', completed: false },
-  { id: generateId(), text: 'Todoアプリを作成', completed: false },
+  { id: generateId(), text: 'Vue3を学ぶ', title: 'Vue3を学ぶ', completed: false, assignee: '', memo: '' },
+  { id: generateId(), text: 'Todoアプリを作成', title: 'Todoアプリを作成', completed: false, assignee: '', memo: '' },
 ]);
 
 // In Progress Tasks
@@ -197,16 +271,48 @@ const doneTasks = ref([]);
 const newTodo = ref('');
 const drag = ref(false);
 
+// Modal state
+const showModal = ref(false);
+const editingTask = ref({});
+const originalTask = ref(null);
+
 // Add new task
 const addTodo = () => {
   if (newTodo.value.trim() !== '') {
     todos.value.push({ 
       id: generateId(), 
-      text: newTodo.value, 
-      completed: false 
+      text: newTodo.value,
+      title: newTodo.value,
+      completed: false,
+      assignee: '',
+      memo: ''
     });
     newTodo.value = '';
   }
+};
+
+// Open task modal
+const openTaskModal = (task) => {
+  editingTask.value = { ...task };
+  originalTask.value = task;
+  showModal.value = true;
+};
+
+// Close modal
+const closeModal = () => {
+  showModal.value = false;
+  editingTask.value = {};
+  originalTask.value = null;
+};
+
+// Save task changes
+const saveTask = () => {
+  if (originalTask.value) {
+    Object.assign(originalTask.value, editingTask.value);
+    // Update text field for backward compatibility
+    originalTask.value.text = editingTask.value.title || editingTask.value.text;
+  }
+  closeModal();
 };
 </script>
 
@@ -405,7 +511,7 @@ const addTodo = () => {
   border-radius: 12px;
   margin-bottom: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  cursor: grab;
+  cursor: pointer;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
@@ -451,21 +557,17 @@ const addTodo = () => {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.todo-item label {
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-  cursor: grab;
-  gap: 12px;
-  position: relative;
+.todo-item.completed::before {
+  background: linear-gradient(45deg, #28a745, #20c997);
 }
 
-.todo-item label:active {
-  cursor: grabbing;
+.task-content {
+  width: 100%;
 }
 
 .task-text {
-  flex: 1;
+  display: block;
+  width: 100%;
   min-width: 0;
   white-space: pre-wrap;
   word-break: break-all;
@@ -474,6 +576,7 @@ const addTodo = () => {
   color: white;
   transition: all 0.3s ease;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  margin-bottom: 8px;
 }
 
 .task-text.completed {
@@ -481,6 +584,26 @@ const addTodo = () => {
   color: rgba(255, 255, 255, 0.6);
   font-style: italic;
   opacity: 0.7;
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.assignee {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 11px;
+}
+
+.memo-indicator {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
 }
 
 .checkbox {
@@ -524,6 +647,215 @@ const addTodo = () => {
   display: block;
 }
 
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 0;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { 
+    transform: translateY(-50px) scale(0.9);
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-radius: 20px 20px 0 0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-body {
+  padding: 25px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-input, .form-textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.form-input:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.checkbox-label {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-label .checkmark {
+  height: 18px;
+  width: 18px;
+  background-color: #f8f9fa;
+  border: 2px solid #dee2e6;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.checkbox-label input:checked ~ .checkmark {
+  background: linear-gradient(45deg, #28a745, #20c997);
+  border-color: #28a745;
+}
+
+.checkbox-label .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-label input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 25px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  background: #f8f9fa;
+  border-radius: 0 0 20px 20px;
+}
+
+.btn-secondary, .btn-primary {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
 /* ドラッグ中のスタイル */
 .sortable-ghost {
   opacity: 0.3;
@@ -550,5 +882,55 @@ const addTodo = () => {
   .kanban-column {
     width: 100%;
   }
+  
+  .modal-content {
+    width: 95%;
+    margin: 20px;
+  }
+}
+
+.status-toggle {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.status-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  background: white;
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.status-btn:hover {
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-1px);
+}
+
+.status-btn.active {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  border-color: #667eea;
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.status-btn.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.status-icon {
+  font-size: 16px;
 }
 </style>
